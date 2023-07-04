@@ -1,5 +1,9 @@
-function taskList() {
-  return <div>yooyoyooyooyoy</div>;
+function TaskList() {
+  return (
+    <>
+      <div>asdasd</div>
+    </>
+  );
 }
 
-export default taskList;
+export default TaskList;

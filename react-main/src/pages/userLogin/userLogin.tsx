@@ -1,5 +1,5 @@
-function userLogin() {
+function UserLogin() {
   return <div>ow;el</div>;
 }
 
-export default userLogin;
+export default UserLogin;

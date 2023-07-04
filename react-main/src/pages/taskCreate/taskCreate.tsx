@@ -1,5 +1,5 @@
-function taskCreate() {
+function TaskCreate() {
   return <div>yooyoyooyooyoy</div>;
 }
 
-export default taskCreate;
+export default TaskCreate;

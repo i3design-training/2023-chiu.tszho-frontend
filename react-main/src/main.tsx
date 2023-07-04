@@ -6,7 +6,7 @@ import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import TaskCreate from './pages/task/Create/TaskCreate';
 
-import UserLogin from './pages/user/UserLogin/UserLogin';
+import UserLogin from './pages/user/Login/UserLogin';
 import TaskList from './pages/task/TaskList/TaskList';
 import Register from './pages/user/Register/Register';
 import LogoutPages from './pages/user/logout/LogoutPages';
@@ -14,6 +14,7 @@ import UserDetail from './pages/user/Detail/UserDetail';
 import UserEdit from './pages/user/Edit/UserEdit';
 import TaskDetail from './pages/task/Detail/TaskDetail';
 import TaskEdit from './pages/task/Edit/TaskEdit';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 const router = createBrowserRouter([
   {
@@ -53,11 +54,13 @@ const router = createBrowserRouter([
     element: <LogoutPages />,
   },
   {
-    path: '/users/{username}',
+    path: '/users/',
+    // path: '/users/{username}',
     element: <UserDetail />,
   },
   {
-    path: '/users/${username}/edit',
+    path: '/users/edit',
+    // path: '/users/${username}/edit',
     element: <UserEdit />,
   },
 ]);
@@ -65,7 +68,9 @@ const container = document.getElementById('root');
 if (container) {
   ReactDOM.createRoot(container).render(
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <StyledEngineProvider injectFirst>
+        <RouterProvider router={router} />
+      </StyledEngineProvider>
     </React.StrictMode>,
   );
 }

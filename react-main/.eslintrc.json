@@ -1,0 +1,40 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@typescript-eslint/strict",
+        "plugin:eslint-comments/recommended",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended",
+        "prettier"
+    ],
+    "overrides": [
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": ["./tsconfig.json"],
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        // see: https://typescript-eslint.io/rules/
+        "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
+        "@typescript-eslint/no-misused-promises": [
+            "error",
+            { "checksVoidReturn": { "arguments": false, "attributes": false } }
+        ],
+        // see: https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/
+        "eslint-comments/require-description": ["error"],
+        "eslint-comments/disable-enable-pair": ["error", { "allowWholeFile": true }]
+    }
+}

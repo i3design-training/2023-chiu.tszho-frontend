@@ -4,9 +4,16 @@ import App from './App';
 
 import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import TaskCreate from './pages/TaskCreate/TaskCreate';
-import TaskList from './pages/TaskList/TaskList';
-import UserLogin from './pages/UserLogin/UserLogin';
+import TaskCreate from './pages/task/Create/TaskCreate';
+
+import UserLogin from './pages/user/UserLogin/UserLogin';
+import TaskList from './pages/task/TaskList/TaskList';
+import Register from './pages/user/Register/Register';
+import LogoutPages from './pages/user/logout/LogoutPages';
+import UserDetail from './pages/user/Detail/UserDetail';
+import UserEdit from './pages/user/Edit/UserEdit';
+import TaskDetail from './pages/task/Detail/TaskDetail';
+import TaskEdit from './pages/task/Edit/TaskEdit';
 
 const router = createBrowserRouter([
   {
@@ -14,16 +21,44 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: '/tasklist',
+    path: '/tasks',
     element: <TaskList />,
   },
   {
-    path: '/taskcreate',
+    path: '/tasks/create',
     element: <TaskCreate />,
   },
   {
-    path: '/userlogin',
+    path: '/tasks/{task_id}',
+    element: <TaskDetail />,
+  },
+  {
+    path: '/tasks/create',
+    element: <TaskCreate />,
+  },
+  {
+    path: '/tasks/{task_id}/edit',
+    element: <TaskEdit />,
+  },
+  {
+    path: '/users/login',
     element: <UserLogin />,
+  },
+  {
+    path: '/users/register',
+    element: <Register />,
+  },
+  {
+    path: '/users/logout',
+    element: <LogoutPages />,
+  },
+  {
+    path: '/users/{username}',
+    element: <UserDetail />,
+  },
+  {
+    path: '/users/${username}/edit',
+    element: <UserEdit />,
   },
 ]);
 const container = document.getElementById('root');

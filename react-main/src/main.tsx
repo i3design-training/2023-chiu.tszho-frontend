@@ -4,9 +4,10 @@ import App from './App';
 
 import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import TaskList from './pages/TaskList/TaskList';
-import UserLogin from './pages/UserLogin/userLogin';
-import TaskCreate from './pages/TaskCreate/TaskCreate';
+import TaskList from './TaskList';
+import UserLogin from './UserLogin';
+import TaskCreate from './TaskCreate';
+
 const router = createBrowserRouter([
   {
     path: '/app',

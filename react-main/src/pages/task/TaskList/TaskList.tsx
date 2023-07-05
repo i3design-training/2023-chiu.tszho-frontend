@@ -43,15 +43,19 @@ function TaskList() {
   function handleDetailClick(task_id: number) {
     navigate('/tasks/' + task_id);
   }
-  handleDetailClick;
+
   function handleEditClick(task_id: number) {
     navigate(`/tasks/${task_id}/edit`);
+  }
+  function handleNewTaskClick() {
+    navigate(`/tasks/create`);
   }
 
   return (
     <TaskLayout>
       <>
         <SearchBar></SearchBar>
+        <Button onClick={handleNewTaskClick}>新しいタスク？</Button>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -75,16 +79,25 @@ function TaskList() {
                   <TableCell>{task.deadline}</TableCell>
                   <TableCell>{task.status}</TableCell>
                   <TableCell>
-                    {task.subTaskName.map((subTask, index) => (
-                      <Typography key={index}>{subTask},</Typography>
-                    ))}
+                    {task.subTaskName &&
+                      task.subTaskName.map((subTask, index) => (
+                        <Typography key={index}>{subTask},</Typography>
+                      ))}
                   </TableCell>
                   <TableCell>
                     <Box display={'flex'} flexDirection={'column'}>
-                      <Button onClick={() => handleDetailClick(task.id)}>
+                      <Button
+                        onClick={() =>
+                          task.id !== undefined && handleDetailClick(task.id)
+                        }
+                      >
                         詳細
                       </Button>
-                      <Button onClick={() => handleEditClick(task.id)}>
+                      <Button
+                        onClick={() =>
+                          task.id !== undefined && handleEditClick(task.id)
+                        }
+                      >
                         edit
                       </Button>
                     </Box>

@@ -33,7 +33,7 @@ function UserDetail() {
         <Button>Upload</Button>
         <Grid sx={{ lineHeight: '80px' }} container>
           <Grid textAlign={'left'} item xs={4}>
-            email:
+            email:asd
           </Grid>
           <Grid item xs={8}>
             <Input />

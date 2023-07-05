@@ -53,26 +53,23 @@ function UserLogin() {
       display={'flex'}
       flexDirection={'column'}
       alignItems={'center'}
-      gap={'30px'}
     >
       <Typography className={styles.title} variant="h2">
         Login
       </Typography>
       <FormControl
-        sx={{ width: '70%' }}
+        sx={{ width: '70%', gap: '30px' }}
         component="form"
         onSubmit={handleSubmit}
       >
         <TextField
-          label="ユーザー名"
+          label="ユーザー名/email"
           name="username"
           value={formData.username}
           onChange={handleInputChange}
           required
           // TextFieldの幅を100%に設定
         />
-      </FormControl>
-      <FormControl sx={{ width: '70%' }}>
         <TextField
           label="パスワード"
           type={showPassword ? 'text' : 'password'}
@@ -96,10 +93,10 @@ function UserLogin() {
           }}
           sx={{ width: '100%' }} // TextFieldの幅を100%に設定
         />
+        <Button type="submit" variant="contained" color="primary">
+          ログイン
+        </Button>
       </FormControl>
-      <Button type="submit" variant="contained" color="primary">
-        ログイン
-      </Button>
     </Box>
   );
 }

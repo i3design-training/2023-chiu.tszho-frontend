@@ -15,6 +15,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import styles from './TaskEdit.module.css';
+import { useNavigate } from 'react-router-dom';
 
 function TaskEdit() {
   const [taskData, setTaskData] = useState<taskInterface>({
@@ -79,20 +80,26 @@ function TaskEdit() {
       [name]: value,
     }));
   };
-
+  const navigate = useNavigate();
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // フォームの送信処理などを実行する
     console.log('ユーザー名:', taskData.name);
     console.log('パスワード:', taskData.description);
     console.log(taskData);
-    // navigate('/users/edit');
+    navigate(`/tasks/${taskData.id}/`);
   };
 
   return (
     <TaskLayout>
       <>
-        <Box>
+        <Box
+          padding={'20px 20% 20px 20%'}
+          display={'flex'}
+          flexDirection={'column'}
+          alignItems={'center'}
+          gap={'30px'}
+        >
           <Typography className={styles.title} variant="h2">
             Task編集
           </Typography>

@@ -1,17 +1,20 @@
 import {
-  Box,
-  Typography,
-  Grid,
-  Input,
   FormControl,
+  Button,
+  TextField,
   IconButton,
   InputAdornment,
-  InputLabel,
-  OutlinedInput,
+  Box,
+  Typography,
 } from '@mui/material';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styles from './UserLogin.module.css';
-import { useState } from 'react';
 import { VisibilityOff, Visibility } from '@material-ui/icons';
+
+interface LoginFormState {
+  username: string;
+  password: string;
+}
 
 function UserLogin() {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,42 +27,76 @@ function UserLogin() {
     event.preventDefault();
   };
 
+  const [formData, setFormData] = useState<LoginFormState>({
+    username: '',
+    password: '',
+  });
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // フォームの送信処理などを実行する
+    console.log('ユーザー名:', formData.username);
+    console.log('パスワード:', formData.password);
+  };
+
   return (
-    <Box padding={'20px 20% 20px 20%'} textAlign={'center'}>
+    <Box
+      padding={'20px 20% 20px 20%'}
+      display={'flex'}
+      flexDirection={'column'}
+      alignItems={'center'}
+    >
       <Typography className={styles.title} variant="h2">
         Login
       </Typography>
-      <Box>
-        <Grid sx={{ lineHeight: '80px' }} container>
-          <Grid textAlign={'left'} item xs={4}>
-            email:
-          </Grid>
-          <Grid item xs={8}>
-            <Input />
-          </Grid>
-          <Grid textAlign={'left'} item xs={4}>
-            password:
-          </Grid>
-          <Grid item xs={8}>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              type={showPassword ? 'text' : 'password'}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </Grid>
-        </Grid>
-      </Box>
+      <FormControl
+        sx={{ width: '70%', gap: '30px' }}
+        component="form"
+        onSubmit={handleSubmit}
+      >
+        <TextField
+          label="ユーザー名/email"
+          name="username"
+          value={formData.username}
+          onChange={handleInputChange}
+          required
+          // TextFieldの幅を100%に設定
+        />
+        <TextField
+          label="パスワード"
+          type={showPassword ? 'text' : 'password'}
+          name="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          required
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{ width: '100%' }} // TextFieldの幅を100%に設定
+        />
+        <Button type="submit" variant="contained" color="primary">
+          ログイン
+        </Button>
+      </FormControl>
     </Box>
   );
 }

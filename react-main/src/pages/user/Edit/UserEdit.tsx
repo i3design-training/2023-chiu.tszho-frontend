@@ -1,19 +1,16 @@
 import {
   Box,
   Typography,
-  Grid,
-  Input,
-  Avatar,
   Button,
   IconButton,
   InputAdornment,
-  OutlinedInput,
   FormControl,
   TextField,
 } from '@mui/material';
 import styles from './UserEdit.module.css';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { VisibilityOff, Visibility } from '@material-ui/icons';
+import { useNavigate } from 'react-router-dom';
 
 interface EditFormState {
   username: string;
@@ -38,6 +35,7 @@ function UserEdit() {
   ) => {
     event.preventDefault();
   };
+  const [prePassword, setPrepassword] = useState(false);
 
   const [formData, setFormData] = useState<EditFormState>({
     username: '',
@@ -53,12 +51,15 @@ function UserEdit() {
     }));
   };
 
+  const navigate = useNavigate();
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // フォームの送信処理などを実行する
     console.log('ユーザー名:', formData.username);
     console.log('パスワード:', formData.password);
+    navigate('/users/edit');
   };
+
   return (
     <Box
       padding={'20px 20% 20px 20%'}
@@ -84,7 +85,7 @@ function UserEdit() {
         <TextField
           label="Email"
           name="email"
-          value={formData.username}
+          value={formData.email}
           onChange={handleInputChange}
           required
         />
@@ -110,12 +111,14 @@ function UserEdit() {
             ),
           }}
         />
+        {/* TODO::passwordと再確認の一致 */}
         <TextField
           label="パスワード再確認"
           type={showPrepassword ? 'text' : 'password'}
           name="password再確認"
           onChange={handleInputChange}
           required
+          helperText="passwordと一致していません。"
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -132,7 +135,7 @@ function UserEdit() {
           }}
         />
         <Button type="submit" variant="contained" color="primary">
-          ログイン
+          編集完了
         </Button>
       </FormControl>
     </Box>

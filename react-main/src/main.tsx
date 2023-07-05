@@ -15,6 +15,11 @@ import UserEdit from './pages/user/Edit/UserEdit';
 import TaskDetail from './pages/task/Detail/TaskDetail';
 import TaskEdit from './pages/task/Edit/TaskEdit';
 import { StyledEngineProvider } from '@mui/material/styles';
+import TaskLayout from './layout/TaskLayout';
+import CategoryList from './pages/category/CategoryList/CategoryList';
+import CategoryCreate from './pages/category/Create/CategoryCreate';
+import CategoryDetail from './pages/category/Detail/CategoryDetail';
+import CategoryEdit from './pages/category/Edit/CategoryEdit';
 
 const router = createBrowserRouter([
   {
@@ -30,7 +35,7 @@ const router = createBrowserRouter([
     element: <TaskCreate />,
   },
   {
-    path: '/tasks/{task_id}',
+    path: `/tasks/:task_id`,
     element: <TaskDetail />,
   },
   {
@@ -38,7 +43,7 @@ const router = createBrowserRouter([
     element: <TaskCreate />,
   },
   {
-    path: '/tasks/{task_id}/edit',
+    path: '/tasks/:task_id/edit',
     element: <TaskEdit />,
   },
   {
@@ -62,6 +67,24 @@ const router = createBrowserRouter([
     path: '/users/edit',
     // path: '/users/${username}/edit',
     element: <UserEdit />,
+  },
+  {
+    path: '/categories',
+    element: <CategoryList />,
+  },
+  {
+    path: '/categories/create',
+    element: <CategoryCreate />,
+  },
+  {
+    path: '/categories/1',
+    // path: '/categories/${category_id}',
+    element: <CategoryDetail />,
+  },
+  {
+    path: '/categories/1/edit',
+    // path: '/categories/${category_id}/edit',
+    element: <CategoryEdit />,
   },
 ]);
 const container = document.getElementById('root');

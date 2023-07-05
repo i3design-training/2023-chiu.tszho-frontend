@@ -1,10 +1,10 @@
 type taskInterface = {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   deadline: string;
   category: string;
   status: 'TODO' | 'In Progress' | 'Done';
-  tagName: string[];
-  subTaskName: string[];
+  tagName?: string[];
+  subTaskName?: string[];
 };

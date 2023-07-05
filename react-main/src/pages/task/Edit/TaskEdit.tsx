@@ -29,13 +29,23 @@ function TaskEdit() {
     subTaskName: ['task4', 'task5'],
   });
 
+  //status関係
+  const [selectedStatus, setSelectedStatus] = useState('');
+
+  const handleStatusChange = (event: SelectChangeEvent) => {
+    const { name, value } = event.target;
+    setTaskData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  //Category関係
   const [categoriesList, setCategoriesList] = useState<string[]>([
     'Categories1',
     'Categories2',
   ]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('');
-
   const [addingCategory, setAddingCategory] = useState(false);
   const handleAdding = () => {
     // if (selectedCategory.trim() !== '') {
@@ -47,7 +57,6 @@ function TaskEdit() {
     // }
     setAddingCategory(true);
   };
-
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setSelectedCategory(event.target.value as string);
   };
@@ -57,19 +66,6 @@ function TaskEdit() {
     setTaskData((prevState) => ({
       ...prevState,
       deadline: formattedDate,
-    }));
-  };
-
-  const handleStatusChange = (event: SelectChangeEvent) => {
-    // setSelectedStatus(event.target.value as string);
-    // setTaskData((prevState) => ({
-    //   ...prevState,
-    //   status: event.target.value,
-    // }));
-    const { name, value } = event.target;
-    setTaskData((prevState) => ({
-      ...prevState,
-      [name]: value,
     }));
   };
 

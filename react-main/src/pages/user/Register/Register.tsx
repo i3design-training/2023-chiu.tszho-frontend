@@ -11,7 +11,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { VisibilityOff, Visibility } from '@material-ui/icons';
 
 import styles from './Register.module.css';
-interface LoginFormState {
+interface RegisterFormState {
   username: string;
   email: string;
   password: string;
@@ -33,7 +33,7 @@ function Register() {
     event.preventDefault();
   };
 
-  const [formData, setFormData] = useState<LoginFormState>({
+  const [formData, setFormData] = useState<RegisterFormState>({
     username: '',
     email: '',
     password: '',

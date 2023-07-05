@@ -15,7 +15,7 @@ import styles from './UserDetail.module.css';
 
 function UserDetail() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [test, setTest] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (

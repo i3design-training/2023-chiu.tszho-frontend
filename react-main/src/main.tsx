@@ -15,7 +15,6 @@ import UserEdit from './pages/user/Edit/UserEdit';
 import TaskDetail from './pages/task/Detail/TaskDetail';
 import TaskEdit from './pages/task/Edit/TaskEdit';
 import { StyledEngineProvider } from '@mui/material/styles';
-import TaskLayout from './layout/TaskLayout';
 import CategoryList from './pages/category/CategoryList/CategoryList';
 import CategoryCreate from './pages/category/Create/CategoryCreate';
 import CategoryDetail from './pages/category/Detail/CategoryDetail';
@@ -51,7 +50,7 @@ const router = createBrowserRouter([
     element: <UserLogin />,
   },
   {
-    path: '/users/register',
+    path: '/register',
     element: <Register />,
   },
   {

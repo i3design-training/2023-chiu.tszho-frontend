@@ -7,15 +7,15 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { VisibilityOff, Visibility } from '@material-ui/icons';
-
 import styles from './Register.module.css';
-interface RegisterFormState {
-  username: string;
-  email: string;
-  password: string;
-}
+import axios from 'axios';
+
+const instance = axios.create({
+  baseURL: 'http://localhost:8000/api/',
+});
+
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -33,25 +33,43 @@ function Register() {
     event.preventDefault();
   };
 
-  const [formData, setFormData] = useState<RegisterFormState>({
-    username: '',
+  const sendUserData = async () => {
+    const jsonData = JSON.stringify(formData);
+    console.log(jsonData);
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/users',
+        jsonData,
+      );
+      alert('OMG');
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [formData, setFormData] = useState<userInterface>({
+    name: '',
     email: '',
     password: '',
+    email_verified: false,
   });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFormData((prevState) => ({
-      ...prevState,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
     }));
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    sendUserData();
     // フォームの送信処理などを実行する
-    console.log('ユーザー名:', formData.username);
-    console.log('パスワード:', formData.password);
+  };
+  const submit = () => {
+    sendUserData();
   };
 
   return (
@@ -60,6 +78,7 @@ function Register() {
       display={'flex'}
       flexDirection={'column'}
       alignItems={'center'}
+      gap={'30px'}
     >
       <Typography className={styles.title} variant="h2">
         新規登録
@@ -71,15 +90,15 @@ function Register() {
       >
         <TextField
           label="ユーザー名"
-          name="username"
-          value={formData.username}
+          name="name"
+          value={formData.name}
           onChange={handleInputChange}
           required
         />
         <TextField
           label="Email"
           name="email"
-          value={formData.username}
+          value={formData.email}
           onChange={handleInputChange}
           required
         />
@@ -126,10 +145,10 @@ function Register() {
             ),
           }}
         />
-        <Button type="submit" variant="contained" color="primary">
-          ログイン
-        </Button>
       </FormControl>
+      <Button onClick={submit} variant="contained" color="primary">
+        新規登録
+      </Button>
     </Box>
   );
 }

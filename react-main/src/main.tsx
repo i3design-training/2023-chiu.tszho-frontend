@@ -19,6 +19,7 @@ import CategoryList from './pages/category/CategoryList/CategoryList';
 import CategoryCreate from './pages/category/Create/CategoryCreate';
 import CategoryDetail from './pages/category/Detail/CategoryDetail';
 import CategoryEdit from './pages/category/Edit/CategoryEdit';
+import EmailVerified from './pages/email/EmailVerified';
 
 const router = createBrowserRouter([
   {
@@ -85,14 +86,19 @@ const router = createBrowserRouter([
     // path: '/categories/${category_id}/edit',
     element: <CategoryEdit />,
   },
+
+  {
+    path: '/emailVerifiied/:token',
+    element: <EmailVerified />,
+  },
 ]);
 const container = document.getElementById('root');
 if (container) {
   ReactDOM.createRoot(container).render(
-    <React.StrictMode>
-      <StyledEngineProvider injectFirst>
-        <RouterProvider router={router} />
-      </StyledEngineProvider>
-    </React.StrictMode>,
+    // <React.StrictMode>
+    <StyledEngineProvider injectFirst>
+      <RouterProvider router={router} />
+    </StyledEngineProvider>,
+    // </React.StrictMode>,
   );
 }

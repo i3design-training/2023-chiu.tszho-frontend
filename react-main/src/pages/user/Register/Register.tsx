@@ -42,7 +42,6 @@ function Register() {
         'http://localhost:8000/api/users',
         jsonData,
       );
-      alert('OMG');
       console.log(response.data);
     } catch (error) {
       console.log(error);

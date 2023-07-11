@@ -15,11 +15,11 @@ import UserEdit from './pages/user/Edit/UserEdit';
 import TaskDetail from './pages/task/Detail/TaskDetail';
 import TaskEdit from './pages/task/Edit/TaskEdit';
 import { StyledEngineProvider } from '@mui/material/styles';
-import TaskLayout from './layout/TaskLayout';
 import CategoryList from './pages/category/CategoryList/CategoryList';
 import CategoryCreate from './pages/category/Create/CategoryCreate';
 import CategoryDetail from './pages/category/Detail/CategoryDetail';
 import CategoryEdit from './pages/category/Edit/CategoryEdit';
+import EmailVerified from './pages/email/EmailVerified';
 
 const router = createBrowserRouter([
   {
@@ -51,7 +51,7 @@ const router = createBrowserRouter([
     element: <UserLogin />,
   },
   {
-    path: '/users/register',
+    path: '/register',
     element: <Register />,
   },
   {
@@ -86,14 +86,19 @@ const router = createBrowserRouter([
     // path: '/categories/${category_id}/edit',
     element: <CategoryEdit />,
   },
+
+  {
+    path: '/emailVerifiied/:token',
+    element: <EmailVerified />,
+  },
 ]);
 const container = document.getElementById('root');
 if (container) {
   ReactDOM.createRoot(container).render(
-    <React.StrictMode>
-      <StyledEngineProvider injectFirst>
-        <RouterProvider router={router} />
-      </StyledEngineProvider>
-    </React.StrictMode>,
+    // <React.StrictMode>
+    <StyledEngineProvider injectFirst>
+      <RouterProvider router={router} />
+    </StyledEngineProvider>,
+    // </React.StrictMode>,
   );
 }

@@ -1,6 +1,7 @@
+import { Link } from '@mui/material';
 import { Box } from '@mui/material';
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 function EmailVerified() {
@@ -8,10 +9,17 @@ function EmailVerified() {
   useEffect(() => {
     emailVerified();
   }, []);
+
+  type date = {
+    token: string;
+  };
+  const [data, setData] = useState<date>({ token: '' });
+  console.log(data);
   const emailVerified = async () => {
+    console.log(token);
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/emailVerifiy/' + token,
+        'http://localhost:8000/emailVerifiy/' + token,
       );
       console.log(response.data);
     } catch (error) {
@@ -21,6 +29,7 @@ function EmailVerified() {
   return (
     <>
       <Box>メール認証成功です、おめでとうございます</Box>
+      <Link>http://localhost:8000/login/</Link>
     </>
   );
 }

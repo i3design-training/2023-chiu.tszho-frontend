@@ -1,31 +1,42 @@
-import { VisibilityOff, Visibility } from '@material-ui/icons';
-import {
-  Box,
-  Typography,
-  Avatar,
-  Button,
-  Grid,
-  OutlinedInput,
-  InputAdornment,
-  IconButton,
-} from '@mui/material';
-import { useState } from 'react';
+import { Box, Typography, Avatar, Button, Grid } from '@mui/material';
+import { useEffect, useState } from 'react';
 import styles from './UserDetail.module.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function UserDetail() {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    event.preventDefault();
-  };
+  const [userProfile, setUserProfile] = useState<userInterface>({
+    id: 'loading',
+    name: 'loading',
+    email: 'loading',
+    password: 'loading',
+  });
 
   const navigate = useNavigate();
   const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     navigate('/users/edit');
+  };
+
+  useEffect(() => {
+    getUserDate();
+  }, []);
+
+  const getUserDate = () => {
+    const userId = 1;
+    const token = localStorage.getItem('token');
+    axios
+      .get(`http://localhost:8000/api/users`, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        setUserProfile(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+        navigate('/login');
+      });
   };
   return (
     <Box
@@ -47,35 +58,13 @@ function UserDetail() {
           email:
         </Grid>
         <Grid item xs={8}>
-          <Typography>youremail@xxxxx.com</Typography>
+          <Typography>{userProfile.email}</Typography>
         </Grid>
         <Grid textAlign={'left'} item xs={4}>
           username:
         </Grid>
         <Grid item xs={8}>
-          <Typography>your username</Typography>
-        </Grid>
-        <Grid textAlign={'left'} item xs={4}>
-          password:
-        </Grid>
-        <Grid item xs={8}>
-          <OutlinedInput
-            disabled
-            id="outlined-adornment-password"
-            type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
+          <Typography>{userProfile.name}</Typography>
         </Grid>
       </Grid>
       <Button variant="contained" color="primary" onClick={handleEditClick}>

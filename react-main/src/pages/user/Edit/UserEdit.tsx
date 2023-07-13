@@ -2,45 +2,41 @@ import {
   Box,
   Typography,
   Button,
-  IconButton,
-  InputAdornment,
   FormControl,
   TextField,
+  Avatar,
 } from '@mui/material';
 import styles from './UserEdit.module.css';
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { VisibilityOff, Visibility } from '@material-ui/icons';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface EditFormState {
-  username: string;
-  // profile_picture: string;
-  email: string;
-  password: string;
-}
+import axios from 'axios';
 
 function UserEdit() {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    event.preventDefault();
+  const token = localStorage.getItem('token');
+  useEffect(() => {
+    getUserDate();
+  }, []);
+
+  const getUserDate = () => {
+    axios
+      .get(`http://localhost:8000/api/users`, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        setFormData(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+        navigate('/login');
+      });
   };
 
-  const [showPrepassword, setShowPrepassword] = useState(false);
-  const handleClickShowPrepassword = () => setShowPrepassword((show) => !show);
-  const handleMouseDownPrepassword = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    event.preventDefault();
-  };
-  const [prePassword, setPrepassword] = useState(false);
-
-  const [formData, setFormData] = useState<EditFormState>({
-    username: '',
+  const [formData, setFormData] = useState<userInterface>({
+    id: '',
+    name: '',
     email: '',
-    password: '',
   });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +51,24 @@ function UserEdit() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // フォームの送信処理などを実行する
-    console.log('ユーザー名:', formData.username);
-    console.log('パスワード:', formData.password);
+    sendUserData();
+
     navigate('/users/edit');
+  };
+
+  const sendUserData = () => {
+    axios
+      .put(`http://localhost:8000/api/users/${formData.id}`, formData, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error.data);
+      });
   };
 
   return (
@@ -70,6 +81,20 @@ function UserEdit() {
       <Typography className={styles.title} variant="h2">
         User編集
       </Typography>
+      <Box
+        display={'flex'}
+        justifyContent={'space-evenly'}
+        flexWrap={'wrap'}
+        flexDirection={'column'}
+        alignItems={'center'}
+        gap={'30px'}
+        marginBottom={'30px'}
+      >
+        <Avatar sizes="10px" sx={{ width: 80, height: 80 }} />
+        <Button variant="contained" color="primary">
+          写真をupload
+        </Button>
+      </Box>
       <FormControl
         sx={{ width: '70%', gap: '30px' }}
         component="form"
@@ -77,8 +102,8 @@ function UserEdit() {
       >
         <TextField
           label="ユーザー名"
-          name="username"
-          value={formData.username}
+          name="name"
+          value={formData.name}
           onChange={handleInputChange}
           required
         />
@@ -89,51 +114,7 @@ function UserEdit() {
           onChange={handleInputChange}
           required
         />
-        <TextField
-          label="パスワード"
-          type={showPassword ? 'text' : 'password'}
-          name="password"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        {/* TODO::passwordと再確認の一致 */}
-        <TextField
-          label="パスワード再確認"
-          type={showPrepassword ? 'text' : 'password'}
-          name="password再確認"
-          onChange={handleInputChange}
-          required
-          helperText="passwordと一致していません。"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPrepassword}
-                  onMouseDown={handleMouseDownPrepassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+
         <Button type="submit" variant="contained" color="primary">
           編集完了
         </Button>

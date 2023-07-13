@@ -47,7 +47,7 @@ const router = createBrowserRouter([
     element: <TaskEdit />,
   },
   {
-    path: '/users/login',
+    path: '/login',
     element: <UserLogin />,
   },
   {
@@ -59,8 +59,8 @@ const router = createBrowserRouter([
     element: <LogoutPages />,
   },
   {
-    path: '/users/',
-    // path: '/users/{username}',
+    // path: '/users/',
+    path: '/users/:username',
     element: <UserDetail />,
   },
   {

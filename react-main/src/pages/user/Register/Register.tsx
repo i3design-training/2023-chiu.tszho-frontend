@@ -35,7 +35,7 @@ function Register() {
     const jsonData = JSON.stringify(formData);
 
     await axios
-      .post('http://localhost:8000/users', jsonData, {})
+      .post('http://localhost:8000/users', jsonData)
       .then((response) => {
         alert(response.data.message);
         navigate('/login');

@@ -23,9 +23,10 @@ function TaskCreate() {
   const [taskData, setTaskData] = useState<taskInterface>({
     title: '',
     description: '',
-    deadline: '',
-    category: '',
-    status: 'TODO',
+    due_date: '',
+    category_id: '',
+    status_id: '',
+    priority_id: null,
   });
   //formControl用のsubmit
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,9 +40,24 @@ function TaskCreate() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // フォームの送信処理などを実行する
+    postTask();
+  };
+  //send task date to server
+  const postTask = () => {
     const jsonData = JSON.stringify(taskData);
-    console.log(jsonData);
-    navigate(`/tasks/`);
+    axios
+      .post('http://localhost:8000/api/task', jsonData, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        alert(response.data.message);
+        navigate(`/tasks/`);
+      })
+      .catch((error) => {
+        alert(error.response.data.error);
+      });
   };
 
   //Category関係
@@ -65,7 +81,6 @@ function TaskCreate() {
         },
       })
       .then((response) => {
-        // console.log(response.data);
         setCategoriesList(response.data);
       })
       .catch((error) => {
@@ -79,7 +94,7 @@ function TaskCreate() {
     const formattedDate = date ? dayjs(date).format('YYYY-MM-DD') : '';
     setTaskData((prevState) => ({
       ...prevState,
-      deadline: formattedDate,
+      due_date: formattedDate,
     }));
   };
 
@@ -153,7 +168,7 @@ function TaskCreate() {
             </InputLabel>
             <Select
               label="Category"
-              name="category"
+              name="category_id"
               value={selectedCategory}
               onChange={handleCategoryChange}
             >
@@ -173,7 +188,7 @@ function TaskCreate() {
             <Select
               label="status"
               value={selectedStatus}
-              name="status"
+              name="status_id"
               onChange={handleStatusChange}
             >
               {statusList.map((status) => (

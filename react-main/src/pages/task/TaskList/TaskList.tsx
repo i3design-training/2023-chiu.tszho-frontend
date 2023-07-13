@@ -12,33 +12,15 @@ import {
   Button,
   Box,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TaskLayout from '../../../layout/TaskLayout';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function TaskList() {
-  const [taskList, setTaskList] = useState<taskInterface[]>([
-    {
-      id: 1,
-      name: 'Task 1',
-      description: 'Description 1',
-      deadline: '2023-07-05',
-      category: 'Category 1',
-      status: 'In Progress',
-      tagName: ['tag1', 'tag2'],
-      subTaskName: ['task4', 'task5'],
-    },
-    {
-      id: 2,
-      name: 'Task 2',
-      description: 'Description 2',
-      deadline: '2023-07-10',
-      category: 'Category 2',
-      status: 'Done',
-      tagName: ['tag1', 'tag2'],
-      subTaskName: ['task4', 'task5'],
-    },
-  ]);
+  const token = localStorage.getItem('token');
+  const [haveTask, setHaveTask] = useState<boolean>(false);
+  const [taskList, setTaskList] = useState<taskInterface[]>([]);
   const navigate = useNavigate();
   function handleDetailClick(task_id: number) {
     navigate('/tasks/' + task_id);
@@ -51,62 +33,92 @@ function TaskList() {
     navigate(`/tasks/create`);
   }
 
+  useEffect(() => {
+    getTask();
+  }, []);
+  const getTask = () => {
+    axios
+      .get('http://localhost:8000/api/tasks', {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        setTaskList(response.data);
+        setHaveTask(true);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
   return (
     <TaskLayout>
       <>
         <SearchBar></SearchBar>
         <Button onClick={handleNewTaskClick}>新しいタスク？</Button>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>カテゴリ</TableCell>
-                <TableCell>task名</TableCell>
-                <TableCell>期限</TableCell>
-                <TableCell>status</TableCell>
-                <TableCell>Subtask</TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>編集</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {taskList.map((task) => (
-                <TableRow key={task.id}>
-                  <TableCell>{task.category}</TableCell>
-                  <TableCell>
-                    <Typography fontSize={24}>{task.name}</Typography>
-                    <Typography>{task.description}</Typography>
-                  </TableCell>
-                  <TableCell>{task.deadline}</TableCell>
-                  <TableCell>{task.status}</TableCell>
-                  <TableCell>
-                    {task.subTaskName &&
-                      task.subTaskName.map((subTask, index) => (
-                        <Typography key={index}>{subTask},</Typography>
-                      ))}
-                  </TableCell>
-                  <TableCell>
-                    <Box display={'flex'} flexDirection={'column'}>
-                      <Button
-                        onClick={() =>
-                          task.id !== undefined && handleDetailClick(task.id)
-                        }
-                      >
-                        詳細
-                      </Button>
-                      <Button
-                        onClick={() =>
-                          task.id !== undefined && handleEditClick(task.id)
-                        }
-                      >
-                        edit
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {haveTask ? (
+          <>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>カテゴリ</TableCell>
+                    <TableCell>task名</TableCell>
+                    <TableCell>期限</TableCell>
+                    <TableCell>status</TableCell>
+                    <TableCell>Subtask</TableCell>
+                    <TableCell sx={{ textAlign: 'center' }}>編集</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {taskList.map((task) => (
+                    <TableRow key={task.id}>
+                      <TableCell>{task.category_name}</TableCell>
+                      <TableCell>
+                        <Typography fontSize={24}>{task.title}</Typography>
+                        <Typography>{task.description}</Typography>
+                      </TableCell>
+                      <TableCell>{task.due_date}</TableCell>
+                      <TableCell>{task.status_name}</TableCell>
+                      <TableCell>
+                        {task.subTaskID &&
+                          task.subTaskID.map((subTask, index) => (
+                            <Typography key={index}>{subTask},</Typography>
+                          ))}
+                      </TableCell>
+                      <TableCell>
+                        <Box display={'flex'} flexDirection={'column'}>
+                          <Button
+                            onClick={() =>
+                              task.id !== undefined &&
+                              handleDetailClick(task.id)
+                            }
+                          >
+                            詳細
+                          </Button>
+                          <Button
+                            onClick={() =>
+                              task.id !== undefined && handleEditClick(task.id)
+                            }
+                          >
+                            edit
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        ) : (
+          <>
+            <Box display={'flex'} justifyContent={'space-evenly'}>
+              <Typography variant="h3">Taskがまだないですよ</Typography>
+            </Box>
+          </>
+        )}
       </>
     </TaskLayout>
   );

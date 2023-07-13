@@ -11,10 +11,7 @@ import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { VisibilityOff, Visibility } from '@material-ui/icons';
 import styles from './Register.module.css';
 import axios from 'axios';
-
-const instance = axios.create({
-  baseURL: 'http://localhost:8000/api/',
-});
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,20 +29,20 @@ function Register() {
   ) => {
     event.preventDefault();
   };
+  const navigate = useNavigate();
 
   const sendUserData = async () => {
     const jsonData = JSON.stringify(formData);
-    console.log(jsonData);
 
-    try {
-      const response = await axios.post(
-        'http://localhost:8000/api/users',
-        jsonData,
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    await axios
+      .post('http://localhost:8000/users', jsonData, {})
+      .then((response) => {
+        alert(response.data.message);
+        navigate('/login');
+      })
+      .catch((error) => {
+        alert(error.response.data.error);
+      });
   };
 
   const [formData, setFormData] = useState<userInterface>({
@@ -64,6 +61,7 @@ function Register() {
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     sendUserData();
     // フォームの送信処理などを実行する
   };
@@ -144,10 +142,10 @@ function Register() {
             ),
           }}
         />
+        <Button type="submit" variant="contained" color="primary">
+          新規登録
+        </Button>
       </FormControl>
-      <Button onClick={submit} variant="contained" color="primary">
-        新規登録
-      </Button>
     </Box>
   );
 }

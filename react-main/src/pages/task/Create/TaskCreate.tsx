@@ -7,18 +7,21 @@ import {
   MenuItem,
   Button,
   SelectChangeEvent,
+  InputLabel,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import TaskLayout from '../../../layout/TaskLayout';
 import styles from './TaskCreate.module.css';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function TaskCreate() {
+  const token = localStorage.getItem('token');
   const [taskData, setTaskData] = useState<taskInterface>({
-    name: '',
+    title: '',
     description: '',
     deadline: '',
     category: '',
@@ -36,20 +39,39 @@ function TaskCreate() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // フォームの送信処理などを実行する
-    console.log('ユーザー名:', taskData.name);
-    console.log('パスワード:', taskData.description);
-    console.log(taskData);
+    const jsonData = JSON.stringify(taskData);
+    console.log(jsonData);
     navigate(`/tasks/`);
   };
 
   //Category関係
-  const [categoriesList, setCategoriesList] = useState<string[]>([
-    'Categories1',
-    'Categories2',
+  const [categoriesList, setCategoriesList] = useState<categoriesInterface[]>([
+    { name: 'loading' },
   ]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setSelectedCategory(event.target.value as string);
+    const { name, value } = event.target;
+    setTaskData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  const getCategories = () => {
+    axios
+      .get(`http://localhost:8000/api/categories`, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        setCategoriesList(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+        navigate('/login');
+      });
   };
 
   // Date関係
@@ -62,14 +84,39 @@ function TaskCreate() {
   };
 
   //status関係
+  const [statusList, setStatusList] = useState<taskStatusInterface[]>([
+    { name: 'loading' },
+  ]);
   const [selectedStatus, setSelectedStatus] = useState('');
   const handleStatusChange = (event: SelectChangeEvent) => {
+    setSelectedStatus(event.target.value as string);
     const { name, value } = event.target;
     setTaskData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
+
+  const getTaskStatus = () => {
+    axios
+      .get(`http://localhost:8000/api/taskStatus`, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        setStatusList(response.data);
+      })
+      .catch((error) => {
+        alert(error.response.data);
+        navigate('/login');
+      });
+  };
+
+  useEffect(() => {
+    getCategories();
+    getTaskStatus();
+  }, []);
 
   return (
     <TaskLayout>
@@ -82,13 +129,13 @@ function TaskCreate() {
           gap={'30px'}
         >
           <Typography className={styles.title} variant="h2">
-            Task編集
+            Task作成
           </Typography>
           <FormControl sx={{ width: '70%', gap: '30px' }} component="form">
             <TextField
               label="Task名"
-              name="name"
-              value={taskData.name}
+              name="title"
+              value={taskData.title}
               onChange={handleInputChange}
               required
             ></TextField>
@@ -99,40 +146,42 @@ function TaskCreate() {
               onChange={handleInputChange}
               required
             ></TextField>
+          </FormControl>
+          <FormControl sx={{ width: '70%', gap: '30px' }} component="fieldset">
+            <InputLabel required id="demo-simple-select-label">
+              Category
+            </InputLabel>
             <Select
               label="Category"
+              name="category"
               value={selectedCategory}
               onChange={handleCategoryChange}
             >
               {categoriesList.map((category) => (
-                <MenuItem key={category} value={category}>
-                  {category}
+                <MenuItem key={category.name} value={category.id}>
+                  {category.name}
+                  {/* TODO::ADD new category */}
                 </MenuItem>
               ))}
-              {/* <MenuItem value="add">
-            <Button onClick={handleAdding}>新しいカテゴリ追加</Button>
-          </MenuItem> */}
             </Select>
-            {/* TODO::ADD new category */}
-            {/* {addingCategory ? (
-          <>
-            <TextField></TextField>
-            <Button>追加</Button>
-          </>
-        ) : (
-          <></>
-        )} */}
           </FormControl>
+
           <FormControl sx={{ width: '70%', gap: '30px' }} component="form">
+            <InputLabel required id="demo-simple-select-label">
+              Status
+            </InputLabel>
             <Select
               label="status"
               value={selectedStatus}
               name="status"
               onChange={handleStatusChange}
             >
-              <MenuItem value="TODO">TODO</MenuItem>
-              <MenuItem value="In Progress">In Progress</MenuItem>
-              <MenuItem value="Done">Done</MenuItem>
+              {statusList.map((status) => (
+                <MenuItem key={status.name} value={status.id}>
+                  {status.name}
+                  {/* TODO::ADD new status */}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl sx={{ width: '70%', gap: '30px' }} component="form">

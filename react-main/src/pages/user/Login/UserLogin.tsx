@@ -10,9 +10,11 @@ import {
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styles from './UserLogin.module.css';
 import { VisibilityOff, Visibility } from '@material-ui/icons';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFormState {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -28,7 +30,7 @@ function UserLogin() {
   };
 
   const [formData, setFormData] = useState<LoginFormState>({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -39,12 +41,31 @@ function UserLogin() {
       [name]: value,
     }));
   };
+  const navigate = useNavigate();
+  const sendUserData = async () => {
+    const jsonData = JSON.stringify(formData);
+    console.log(jsonData);
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/login',
+        jsonData,
+      );
+
+      // トークンをローカルストレージに保存する
+      console.log(response.data);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('name', response.data.name);
+      navigate('/tasks');
+    } catch (error) {
+      console.log(error);
+      alert('login失敗');
+    }
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // フォームの送信処理などを実行する
-    console.log('ユーザー名:', formData.username);
-    console.log('パスワード:', formData.password);
+    sendUserData();
   };
 
   return (
@@ -63,9 +84,9 @@ function UserLogin() {
         onSubmit={handleSubmit}
       >
         <TextField
-          label="ユーザー名/email"
-          name="username"
-          value={formData.username}
+          label="email"
+          name="email"
+          value={formData.email}
           onChange={handleInputChange}
           required
           // TextFieldの幅を100%に設定

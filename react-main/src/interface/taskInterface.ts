@@ -1,6 +1,6 @@
 type taskInterface = {
   id?: number;
-  name: string;
+  title: string;
   description: string;
   deadline: string;
   category: string;

@@ -1,18 +1,42 @@
 import { Box, Button, Typography } from '@mui/material';
 import TaskLayout from '../../../layout/TaskLayout';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './CategoryList.module.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function CategoryList() {
-  const [categoriesList, setCategoriesList] = useState<string[]>([
-    'Categories1',
-    'Categories2',
+  const token = localStorage.getItem('token');
+  const [categoriesList, setCategoriesList] = useState<categoriesInterface[]>([
+    { id: '', name: 'loading' },
   ]);
   const navigate = useNavigate();
   const handleAddCategory = () => {
     navigate(`/categories/create`);
   };
+  const handleEditCategory = (category_id: string) => {
+    navigate(`/categories/${category_id}/edit`);
+  };
+
+  const getCategories = () => {
+    axios
+      .get(`http://localhost:8000/api/categories`, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        setCategoriesList(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
   return (
     <TaskLayout>
       <Typography className={styles.title} variant="h2">
@@ -27,9 +51,11 @@ function CategoryList() {
       >
         <Button onClick={handleAddCategory}>新しいcategoryを追加？</Button>
         {categoriesList.map((category, index) => (
-          <Box>
-            <Button key={index}>{category}</Button>
-            <Button>編集</Button>
+          <Box key={index}>
+            <Button>{category.name}</Button>
+            <Button onClick={() => handleEditCategory(category.id ?? '')}>
+              編集
+            </Button>
           </Box>
         ))}
       </Box>

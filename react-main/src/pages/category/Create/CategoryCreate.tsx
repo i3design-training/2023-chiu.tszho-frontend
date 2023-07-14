@@ -4,16 +4,34 @@ import styles from './CategoryCreate.module.css';
 import { Box, Button, Input, TextField } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function CategoryCreate() {
-  const [categoryName, setCategoryName] = useState('');
+  const token = localStorage.getItem('token');
+  const [category, setCategory] = useState<categoriesInterface>({
+    name: '',
+  });
   const handleCategoryNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setCategoryName(event?.target.value);
+    setCategory({ name: event?.target.value });
+  };
+  const createCategory = () => {
+    axios
+      .post(`http://localhost:8000/api/categories`, category, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        alert(response.data.message);
+        navigate(`/categories/`);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   const navigate = useNavigate();
   const handleSubmit = () => {
-    console.log(categoryName);
-    navigate(`/categories/`);
+    createCategory();
   };
   return (
     <TaskLayout>
@@ -30,7 +48,7 @@ function CategoryCreate() {
         <TextField
           label="カテゴリ名"
           name="categoryName"
-          value={categoryName}
+          value={category.name}
           onChange={handleCategoryNameChange}
           required
         />

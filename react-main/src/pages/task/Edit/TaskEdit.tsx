@@ -20,7 +20,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function TaskEdit() {
-  const defaultDate = dayjs('2022-04-17');
   const { task_id } = useParams();
   const token = localStorage.getItem('token');
 

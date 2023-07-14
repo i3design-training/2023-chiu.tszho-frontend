@@ -77,13 +77,11 @@ const router = createBrowserRouter([
     element: <CategoryCreate />,
   },
   {
-    path: '/categories/1',
-    // path: '/categories/${category_id}',
+    path: '/categories/:category_id',
     element: <CategoryDetail />,
   },
   {
-    path: '/categories/1/edit',
-    // path: '/categories/${category_id}/edit',
+    path: '/categories/:category_id/edit',
     element: <CategoryEdit />,
   },
 

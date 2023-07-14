@@ -36,6 +36,11 @@ function TaskLayout({ children }: { children: React.ReactNode }) {
     const name = localStorage.getItem('name');
     navigate(`/users/${name}`);
   };
+  const handleLogout = () => {
+    localStorage.removeItem('name');
+    localStorage.removeItem('token');
+    navigate(`/login`);
+  };
 
   function handleListKeyDown(event: React.KeyboardEvent) {
     if (event.key === 'Tab') {
@@ -66,6 +71,7 @@ function TaskLayout({ children }: { children: React.ReactNode }) {
   const handleTagClick = () => {
     // navigate('/Tag');
   };
+
   return (
     <>
       <Box display={'flex'} alignItems={'center'} gap={'20px'}>
@@ -91,7 +97,7 @@ function TaskLayout({ children }: { children: React.ReactNode }) {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <Typography>name</Typography>
+          <Typography>{localStorage.getItem('name')}</Typography>
           <Avatar></Avatar>
           <Popper
             open={open}
@@ -118,7 +124,7 @@ function TaskLayout({ children }: { children: React.ReactNode }) {
                       onKeyDown={handleListKeyDown}
                     >
                       <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>

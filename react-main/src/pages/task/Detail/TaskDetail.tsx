@@ -1,19 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TaskLayout from '../../../layout/TaskLayout';
 import { Box, Grid, Typography } from '@mui/material';
 import styles from './TaskDetail.module.css';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function TaskDetail() {
+  const { task_id } = useParams();
+  const token = localStorage.getItem('token');
   const [taskData, setTaskData] = useState<taskInterface>({
-    id: 1,
-    name: 'Task 1',
-    description: 'Description 1',
-    deadline: '2023-07-05',
-    category: 'Category 1',
-    status: 'In Progress',
-    tagName: ['tag1', 'tag2'],
-    subTaskName: ['task4', 'task5'],
+    id: task_id,
+    title: 'loading',
+    description: 'loading',
+    due_date: null,
+    category_id: '',
+    category_name: 'loading',
+    status_id: '',
+    status_name: 'loading',
+    priority_id: null,
+    tagID: [],
+    subTaskID: [],
   });
+  const getTask = async () => {
+    await axios
+      .get(`http://localhost:8000/api/task/${task_id}`, {
+        headers: {
+          token: `${token}`,
+        },
+      })
+      .then((response) => {
+        setTaskData(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getTask();
+  }, []);
   return (
     <TaskLayout>
       <Box
@@ -27,10 +52,10 @@ function TaskDetail() {
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={5}>
-            <Typography>Name:</Typography>
+            <Typography>Title:</Typography>
           </Grid>
           <Grid item xs={7}>
-            <Typography border={1}>{taskData.name}</Typography>
+            <Typography border={1}>{taskData.title}</Typography>
           </Grid>
           <Grid item xs={5}>
             <Typography>description:</Typography>
@@ -42,19 +67,19 @@ function TaskDetail() {
             <Typography>Category:</Typography>
           </Grid>
           <Grid item xs={7}>
-            <Typography border={1}>{taskData.category}</Typography>
+            <Typography border={1}>{taskData.category_name}</Typography>
           </Grid>
           <Grid item xs={5}>
             <Typography>status:</Typography>
           </Grid>
           <Grid item xs={7}>
-            <Typography border={1}>{taskData.status}</Typography>
+            <Typography border={1}>{taskData.status_name}</Typography>
           </Grid>
           <Grid item xs={5}>
-            <Typography>deadline:</Typography>
+            <Typography>due_date:</Typography>
           </Grid>
           <Grid item xs={7}>
-            <Typography border={1}>{taskData.deadline}</Typography>
+            <Typography border={1}>{taskData.due_date}</Typography>
           </Grid>
         </Grid>
       </Box>
